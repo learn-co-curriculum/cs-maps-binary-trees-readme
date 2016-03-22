@@ -1,6 +1,8 @@
 tags:
-  - a tag
+  - Map interface
+  - Binary search tree
+  - Self-balancing tree
 languages:
-  - a language
+  - Java
 resources: 
-  - 0
+  - 2
