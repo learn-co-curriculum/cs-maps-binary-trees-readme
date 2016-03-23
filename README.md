@@ -4,8 +4,7 @@
 
 1.  Review a `Map` implementation using a binary search tree (BST).
 2.  Analyze the performance of BST methods.
-3.  Understand the problem of unbalanced trees.
-4.  Know that self-balancing trees solve this problem.
+3.  Explain the problem of unbalanced trees and how self-balancing trees solve this problem.
 
 
 ## Overview
@@ -283,6 +282,12 @@ In our example code, if we replace `MyTreeMap` with the Java `TreeMap`, the runt
 
 In summary, a binary search tree can implement `get` and `put` in logarithmic time, but only if the keys are added in an order that keeps the tree sufficiently balanced.  Self-balancing trees avoid this problem by doing some additional work each time a new key is added.
 
+
+## One more exercise
+
+In the previous lab we decided not to implement `remove`, but you might want to try it.  If you remove a node from the middle of the tree, you have to rearrange the remaining nodes to restore the BST property.  You can probably figure out how to do that on your own, or you can [read the explanation here](https://en.wikipedia.org/wiki/Binary_search_tree#Deletion).
+
+Removing a node and rebalancing a tree are similar operations: if you do this exercise, you will have a better idea of how self-balancing trees work.
 
 
 ## Resources
