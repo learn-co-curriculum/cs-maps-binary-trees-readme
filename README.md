@@ -1,6 +1,6 @@
 # cs-maps-binary-trees-lab
 
-## Learning goals 
+## Learning goals
 
 1.  Review a `Map` implementation using a binary search tree (BST).
 2.  Analyze the performance of BST methods.
@@ -18,32 +18,32 @@ In the previous lab we gave you the outline of `MyTreeMap` and asked you to fill
 
 
 ```java
-	private Node findNode(Object target) {
-		// some implementations can handle null as a key, but not this one
-		if (target == null) {
-        		throw new NullPointerException();
-		}
-		
-		// something to make the compiler happy
-		@SuppressWarnings("unchecked")
-		Comparable<? super K> k = (Comparable<? super K>) target;
-		
-		// the actual search
-        	Node node = root;
-        	while (node != null) {
-            		int cmp = k.compareTo(node.key);
-            		if (cmp < 0)
-                		node = node.left;
-            		else if (cmp > 0)
-                		node = node.right;
-            		else
-                		return node;
-        	}
-        	return null;
+private Node findNode(Object target) {
+	// some implementations can handle null as a key, but not this one
+	if (target == null) {
+    		throw new NullPointerException();
 	}
+
+	// something to make the compiler happy
+	@SuppressWarnings("unchecked")
+	Comparable<? super K> k = (Comparable<? super K>) target;
+
+	// the actual search
+	Node node = root;
+	while (node != null) {
+    		int cmp = k.compareTo(node.key);
+    		if (cmp < 0)
+        		node = node.left;
+    		else if (cmp > 0)
+        		node = node.right;
+    		else
+        		return node;
+	}
+	return null;
+}
 ```
 
-`findNode` is a private methods used by `containsKey` and `get`; it is not part of the `Map` interface.  The parameter `target` is the key we're looking for.  We explained the first part of this function in the previous lab:
+`findNode` is a private method used by `containsKey` and `get`; it is not part of the `Map` interface.  The parameter `target` is the key we're looking for.  We explained the first part of this function in the previous lab:
 
 *  In this implementation, `null` is not a legal value for a key.
 
@@ -61,25 +61,25 @@ As we explained in the previous lab, the runtime of `findNode` is proportional t
 Our solution is recursive:
 
 ```java
-	public boolean containsValue(Object target) {
-		return containsValueHelper(root, target);
-	}
+public boolean containsValue(Object target) {
+	return containsValueHelper(root, target);
+}
 
-	private boolean containsValueHelper(Node node, Object target) {
-		if (node == null) {
-			return false;
-		}
-		if (equals(target, node.value)) {
-			return true;
-		}
-		if (containsValueHelper(node.left, target)) {
-			return true;
-		}
-		if (containsValueHelper(node.right, target)) {
-			return true;
-		}
+private boolean containsValueHelper(Node node, Object target) {
+	if (node == null) {
 		return false;
 	}
+	if (equals(target, node.value)) {
+		return true;
+	}
+	if (containsValueHelper(node.left, target)) {
+		return true;
+	}
+	if (containsValueHelper(node.right, target)) {
+		return true;
+	}
+	return false;
+}
 ```
 
 `containsValue` takes the target value as a parameter and immediately invokes `containsValueHelper`, passing the root of the tree as an additional parameter.
@@ -104,51 +104,51 @@ The `put` method is a little more complicated than `get` because it has to deal 
 In the previous lab, we provided this starter code:
 
 ```java
-	public V put(K key, V value) {
-		if (key == null) {
-			throw new NullPointerException();
-		}
-		if (root == null) {
-			root = new Node(key, value);
-			size++;
-			return null;
-		}
-		return putHelper(root, key, value);
+public V put(K key, V value) {
+	if (key == null) {
+		throw new NullPointerException();
 	}
+	if (root == null) {
+		root = new Node(key, value);
+		size++;
+		return null;
+	}
+	return putHelper(root, key, value);
+}
 ```
 
 And we asked you to fill in `putHelper`.  Here's our solution:
 
 ```java
-	private V putHelper(Node node, K key, V value) {
-		Comparable<? super K> k = (Comparable<? super K>) key;
-		int cmp = k.compareTo(node.key);
-		
-		if (cmp < 0) {
-			if (node.left == null) {
-				node.left = new Node(key, value);
-				size++;
-				return null;
-			} else {
-				return putHelper(node.left, key, value);
-			}
+private V putHelper(Node node, K key, V value) {
+	Comparable<? super K> k = (Comparable<? super K>) key;
+	int cmp = k.compareTo(node.key);
+
+	if (cmp < 0) {
+		if (node.left == null) {
+			node.left = new Node(key, value);
+			size++;
+			return null;
+		} else {
+			return putHelper(node.left, key, value);
 		}
-		if (cmp > 0) {
-			if (node.right == null) {
-				node.right = new Node(key, value);
-				size++;
-				return null;
-			} else {
-				return putHelper(node.right, key, value);
-			}
-		}
-		V oldValue = node.value;
-		node.value = value;
-		return oldValue;
 	}
+	if (cmp > 0) {
+		if (node.right == null) {
+			node.right = new Node(key, value);
+			size++;
+			return null;
+		} else {
+			return putHelper(node.right, key, value);
+		}
+	}
+	V oldValue = node.value;
+	node.value = value;
+	return oldValue;
+}
 ```
 
-The first parameter, `node`, is initially the root of the tree, but each time we make a recursive call, it refers to a different subtree. 
+The first parameter, `node`, is initially the root of the tree, but each time we make a recursive call, it refers to a different subtree.
 
 As in `get`, we use the `compareTo` method to figure out which path to follow through the tree.  
 
@@ -158,7 +158,7 @@ If `cmp < 0 `, the key we're adding is less than `node.key`, so we want to look 
 
 *  Otherwise we make a recursive call to search the left subtree.
 
-If `cmp > 0 `, the key we're adding is greater than `node.key`, so we want to look in the right subtree.  And we handle the same two cases as in the previous branch.
+If `cmp > 0`, the key we're adding is greater than `node.key`, so we want to look in the right subtree.  And we handle the same two cases as in the previous branch.
 
 Finally, if `cmp == 0`, we found the key in the tree, so we replace and return the old value.
 
@@ -172,18 +172,18 @@ The last method we asked you to write is `keySet`, which returns a `Set` that co
 Here's our solution:
 
 ```java
-	public Set<K> keySet() {
-		Set<K> set = new LinkedHashSet<K>();
-		addInOrder(root, set);
-		return set;
-	}
+public Set<K> keySet() {
+	Set<K> set = new LinkedHashSet<K>();
+	addInOrder(root, set);
+	return set;
+}
 
-	private void addInOrder(Node node, Set<K> set) {
-		if (node == null) return;
-		addInOrder(node.left, set);
-		set.add(node.key);
-		addInOrder(node.right, set);		
-	}
+private void addInOrder(Node node, Set<K> set) {
+	if (node == null) return;
+	addInOrder(node.left, set);
+	set.add(node.key);
+	addInOrder(node.right, set);		
+}
 ```
 
 In `keySet`, we create a `LinkedHashSet`, which is a `Set` implementation that keeps the elements in order (unlike most other `Set` implementations).  Then we call `addInOrder` to traverse the tree.
@@ -218,12 +218,12 @@ To see how this works out in practice, we'll test our implementation with two sa
 Here's the code that generates random strings:
 
 ```java
-		Map<String, Integer> map = new MyTreeMap<String, Integer>();
-		
-		for (int i=0; i<n; i++) {
-			String uuid = UUID.randomUUID().toString();
-			map.put(uuid, 0);
-		}
+Map<String, Integer> map = new MyTreeMap<String, Integer>();
+
+for (int i=0; i<n; i++) {
+	String uuid = UUID.randomUUID().toString();
+	map.put(uuid, 0);
+}
 ```
 
 `UUID` is a class in the `java.util` package that can generate a random "universally unique identifier".  UUIDs are useful for a variety of applications, but in this example we're taking advantage of an easy way to generate random strings.
@@ -239,17 +239,17 @@ We computed "log base 2 of size of MyTreeMap" to see how tall the tree would be 
 
 The actual tree of random strings has height 33, which is substantially more than the theoretical minimum, but not too bad.  To find one key in a collection of 16,384, we only have to make 33 comparisons.  Compared to a linear search, that's almost 500 times faster.
 
-This performance is typical with random strings or other keys that are added in no particular order.  The final height of the tree might be 2-3 times the theoretical minimum, but it is still proportional to `log n`, which is much less than `n`.  In fact, `log n` grows so slowly as `n` increases, it can be difficult to distinguish logarithmic time from contant time in practice.
+This performance is typical with random strings or other keys that are added in no particular order.  The final height of the tree might be 2-3 times the theoretical minimum, but it is still proportional to `log n`, which is much less than `n`.  In fact, `log n` grows so slowly as `n` increases, it can be difficult to distinguish logarithmic time from constant time in practice.
 
 However, binary search trees don't always behave so well.  Let's see what happens when we add keys in increasing order.  Here's an example that measures timestamps in nanoseconds and uses them as keys:
 
 ```java
-		MyTreeMap<String, Integer> map = new MyTreeMap<String, Integer>();
-		
-		for (int i=0; i<n; i++) {
-			String timestamp = Long.toString(System.nanoTime());
-			map.put(timestamp, 0);
-		}
+MyTreeMap<String, Integer> map = new MyTreeMap<String, Integer>();
+
+for (int i=0; i<n; i++) {
+	String timestamp = Long.toString(System.nanoTime());
+	map.put(timestamp, 0);
+}
 ```
 
 `System.nanoTime` returns an integer with type `long` that indicates elapsed time in nanoseconds.  Each time we call it, we get a somewhat bigger number.  When we convert these timestamps to strings, they appear in increasing alphabetical order.
